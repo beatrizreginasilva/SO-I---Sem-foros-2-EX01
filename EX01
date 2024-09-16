@@ -1,0 +1,44 @@
+package SOI9;
+
+public class SOI9 {
+
+    private final Object cruzamentoLock = new Object();
+
+    static class Carro extends Thread {
+        private String sentido;
+
+        public Carro(String sentido) {
+            this.sentido = sentido;
+        }
+
+        @Override
+        public void run() {
+            try {
+                atravessarCruzamento();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        private void atravessarCruzamento() throws InterruptedException {
+            synchronized (SOI9.class) { 
+                System.out.println("Carro " + getId() + " passando no cruzamento, sentido: " + sentido);
+                Thread.sleep(1000);
+                System.out.println("Carro " + getId() + " terminou de atravessar o cruzamento.");
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+ 
+        Carro carro1 = new Carro("Norte para Sul");
+        Carro carro2 = new Carro("Sul para Norte");
+        Carro carro3 = new Carro("Leste para Oeste");
+        Carro carro4 = new Carro("Oeste para Leste");
+
+        carro1.start();
+        carro2.start();
+        carro3.start();
+        carro4.start();
+    }
+}
